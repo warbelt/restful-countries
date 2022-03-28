@@ -3,12 +3,12 @@ import csv
 from attr import field
 from flask import request
 
-from flask.views import View
+from flask.views import MethodView
 
 import flask_restful_countries.resources as module_resources
 
 
-class ShowCountries(View):
+class ShowCountries(MethodView):
     methods = ["GET", "POST"]
 
     def get_all_countries(self):
@@ -41,33 +41,32 @@ class ShowCountries(View):
                 'iso3': iso3
             })
 
-    def dispatch_request(self):
-        if request.method == 'GET':
-            request_country = request.args.get("country")
+    def get(self):
+        request_country = request.args.get("country")
 
-            country_data = self.get_country_data(request_country)
-            if country_data:
-                return {
-                    "name":request_country,
-                    "translations": {
-                        "iso2": country_data["iso2"],
-                        "iso3": country_data["iso3"]
-                    }
-                }
-            return f'Country "{request_country}" not found'
-
-        elif request.method == 'POST':
-            name = request.args.get("country")
-            iso2 = request.args.get("iso2")
-            iso3 = request.args.get("iso3")
-
-            if name and iso2 and iso3:
-                self.insert_country(name, iso2, iso3)
-
+        country_data = self.get_country_data(request_country)
+        if country_data:
             return {
-                "name":name,
+                "name":request_country,
                 "translations": {
-                    "iso2": iso2,
-                    "iso3": iso3
+                    "iso2": country_data["iso2"],
+                    "iso3": country_data["iso3"]
                 }
             }
+        return f'Country "{request_country}" not found'
+
+    def post(self):
+        name = request.args.get("country")
+        iso2 = request.args.get("iso2")
+        iso3 = request.args.get("iso3")
+
+        if name and iso2 and iso3:
+            self.insert_country(name, iso2, iso3)
+
+        return {
+            "name":name,
+            "translations": {
+                "iso2": iso2,
+                "iso3": iso3
+            }
+        }
