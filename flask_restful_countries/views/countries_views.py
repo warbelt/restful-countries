@@ -11,10 +11,10 @@ import flask_restful_countries.resources as module_resources
 class ShowCountries(MethodView):
     methods = ["GET", "POST"]
 
-    def get_all_countries(self):
+    def get_countries_list(self):
         countries_csv = importlib.resources.files(module_resources).joinpath("country_codes.csv")
         with countries_csv.open('r') as f:
-            countries = [row for row in csv.DictReader(f, delimiter=',')]
+            countries = [row['name'] for row in csv.DictReader(f, delimiter=',')]
         return countries
 
     def get_country_data(self, name):
@@ -41,19 +41,23 @@ class ShowCountries(MethodView):
                 'iso3': iso3
             })
 
-    def get(self):
-        request_country = request.args.get("country")
-
-        country_data = self.get_country_data(request_country)
-        if country_data:
+    def get(self, country_name):
+        if country_name is None:
             return {
-                "name":request_country,
-                "translations": {
-                    "iso2": country_data["iso2"],
-                    "iso3": country_data["iso3"]
-                }
+                'name': self.get_countries_list()
             }
-        return f'Country "{request_country}" not found'
+
+        else:
+            country_data = self.get_country_data(country_name)
+            if country_data:
+                return {
+                    "name":country_name,
+                    "translations": {
+                        "iso2": country_data["iso2"],
+                        "iso3": country_data["iso3"]
+                    }
+                }
+            return f'Country "{country_name}" not found'
 
     def post(self):
         name = request.args.get("country")
