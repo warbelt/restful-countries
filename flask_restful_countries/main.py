@@ -7,7 +7,7 @@ app = Flask(__name__)
 def register_urls(app):
     countries_view = countries_views.ShowCountries.as_view('show_countries')
     app.add_url_rule("/countries/",
-                    defaults={'country_name': "1234"},
+                    defaults={'country_name': None},
                     view_func=countries_view,
                     methods=["GET"])
 
