@@ -7,7 +7,7 @@ COUNTRIES_DATABASE = 'countries.sqlite3'
 
 def row_to_dict(cursor, row):
     return {
-        cursor.description[idx][0] : value
+        cursor.description[idx][0]: value
         for idx, value in enumerate(row)
     }
 

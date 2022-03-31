@@ -1,12 +1,9 @@
-import importlib.resources
-import csv
-import sqlite3
-from attr import field
 from flask import request
 
 from flask.views import MethodView
 
 from flask_restful_countries.model import countries as countries_connector
+
 
 class ShowCountries(MethodView):
     methods = ["GET", "POST"]
@@ -34,7 +31,7 @@ class ShowCountries(MethodView):
             country_data = self.get_country_data(country_name)
             if country_data:
                 return {
-                    "name":country_name,
+                    "name": country_name,
                     "translations": {
                         "iso2": country_data["iso2"],
                         "iso3": country_data["iso3"]
@@ -51,7 +48,7 @@ class ShowCountries(MethodView):
             self.insert_country(name, iso2, iso3)
 
         return {
-            "name":name,
+            "name": name,
             "translations": {
                 "iso2": iso2,
                 "iso3": iso3

@@ -14,7 +14,8 @@ def get_country_data(name: str):
     """
     Returns a single row with fields name, iso2, iso3 for country with name that matches
     """
-    country_data = db.execute_query("""
+    country_data = db.execute_query(
+        """
             SELECT name, iso2, iso3
             FROM countries
             WHERE name=?
@@ -30,7 +31,8 @@ def insert_country(name: str, iso2: str, iso3: str):
     """
     Inserts a new row into database with fields name, iso2, iso3
     """
-    db.execute_query("""
+    db.execute_query(
+        """
             INSERT INTO countries (name, iso2, iso3)
             VALUES (?,?,?)
         """,

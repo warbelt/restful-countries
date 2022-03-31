@@ -1,4 +1,3 @@
-from importlib.resources import path
 import sqlite3
 import os
 import csv
