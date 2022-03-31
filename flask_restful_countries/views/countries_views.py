@@ -1,21 +1,21 @@
 import importlib.resources
 import csv
+import sqlite3
 from attr import field
 from flask import request
 
 from flask.views import MethodView
 
 import flask_restful_countries.resources as module_resources
-
+from flask_restful_countries.model import countries as countries_connector
 
 class ShowCountries(MethodView):
     methods = ["GET", "POST"]
 
     def get_countries_list(self):
-        countries_csv = importlib.resources.files(module_resources).joinpath("country_codes.csv")
-        with countries_csv.open('r') as f:
-            countries = [row['name'] for row in csv.DictReader(f, delimiter=',')]
-        return countries
+        countries = countries_connector.get_countries_list()
+
+        return [country['name'] for country in countries]
 
     def get_country_data(self, name):
         countries_csv = importlib.resources.files(module_resources).joinpath("country_codes.csv")
