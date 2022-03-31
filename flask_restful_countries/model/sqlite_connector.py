@@ -2,7 +2,7 @@ import sqlite3
 from flask import g
 
 
-COUNTRIES_DATABASE = 'countries.db'
+COUNTRIES_DATABASE = 'countries.sqlite3'
 
 
 def row_to_dict(cursor, row):
