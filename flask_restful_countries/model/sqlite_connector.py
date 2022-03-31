@@ -26,4 +26,13 @@ def execute_query(query, args=(), one=False):
     query_results = cur.fetchall()
     cur.close()
 
-    return query_results[0] if one else query_results
+    if query_results and one:
+        return query_results[0]
+    elif query_results and not one:
+        return query_results
+    else:
+        return None
+
+
+def commit_transaction():
+    get_db().commit()

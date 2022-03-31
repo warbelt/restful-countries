@@ -6,7 +6,6 @@ from flask import request
 
 from flask.views import MethodView
 
-import flask_restful_countries.resources as module_resources
 from flask_restful_countries.model import countries as countries_connector
 
 class ShowCountries(MethodView):
@@ -18,28 +17,12 @@ class ShowCountries(MethodView):
         return [country['name'] for country in countries]
 
     def get_country_data(self, name):
-        countries_csv = importlib.resources.files(module_resources).joinpath("country_codes.csv")
-        with countries_csv.open('r') as f:
-            country_data = [row for row in csv.DictReader(f, delimiter=',') if row['name'] == name]
+        country_data = countries_connector.get_country_data(name)
 
-        if len(country_data) == 0:
-            return None
-        else:
-            return country_data[0]
+        return country_data
 
     def insert_country(self, name, iso2, iso3):
-        countries_csv = importlib.resources.files(module_resources).joinpath("country_codes.csv")
-        with countries_csv.open('r') as f:
-            countries = csv.DictReader(f, delimiter=',')
-
-        with countries_csv.open('a') as f:
-            field_names = ["name", 'iso2', 'iso3']
-            writer = csv.DictWriter(f, field_names)
-            writer.writerow({
-                'name': name,
-                'iso2': iso2,
-                'iso3': iso3
-            })
+        countries_connector.insert_country(name, iso2, iso3)
 
     def get(self, country_name):
         if country_name is None:
